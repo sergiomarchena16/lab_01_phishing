@@ -7,17 +7,14 @@ import pandas as pd
 import numpy as np
 import sklearn as sk
 import  matplotlib.pyplot as plt
-import seaborn as sns 
 import pandas_profiling as pp
-
-from google.colab import data_table
-data_table.enable_dataframe_formatter()
+from pandas_profiling import ProfileReport
 
 # PARTE 1
 
 # EXPLORACION DE DATOS
 
-df = pd.read_csv('lab_01_phishing\dataset_pishing.csv')
+df = pd.read_csv("C:\\Users\\sergi\\Desktop\\UVG\\2022\\SECURITY DATA SCIENCE\\lab_01_phishing\\lab_01_phishing\\dataset_pishing.csv", encoding="utf-8")
 df.head()
 
 df['status'].value_counts(dropna=False)
@@ -147,8 +144,6 @@ df[['hostname','f27']]
 df.drop(['hostname'],axis=1,inplace=True)
 df['hostname'] = df['url'].apply(get_domain)
 
-df
-
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # PREPROCESAMIENTO
@@ -163,16 +158,14 @@ def changeStatus(x):
     return x
 
 df['status'] = df['status'].apply(changeStatus)
-df
 
 # verificacion y eliminacion de columna 'hostname'
 df.drop(['hostname'], axis=1, inplace=True)
-df
 
 # eliminacion del dominio
 df.drop('url', axis=1, inplace=True)
 dfTest = df
-df
+
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -183,12 +176,19 @@ df_final = df
 finalFeatures = df_final.columns
 print('final features:' , finalFeatures)
 
+print("hola")
+print(df_final)
+
+'''
+
 #pip install -U pandas-profiling
 
 # Reporte
-from pandas_profiling import ProfileReport
+
 profile2 = ProfileReport(df)
 profile2.to_file('Reporte de data de Phishing (sample).html')
+
+'''
 
 #print(pd.__version__)
 #!pip freeze |grep pandas-profiling
