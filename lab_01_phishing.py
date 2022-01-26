@@ -143,7 +143,7 @@ df[['hostname','f27']]
 
 df.drop(['hostname'],axis=1,inplace=True)
 df['hostname'] = df['url'].apply(get_domain)
-
+df.head()
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # PREPROCESAMIENTO
@@ -165,8 +165,8 @@ df.drop(['hostname'], axis=1, inplace=True)
 # eliminacion del dominio
 df.drop('url', axis=1, inplace=True)
 dfTest = df
-
-
+df.head()
+dfTest.head()
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # VISUALIZACION DE RESULTADOS
@@ -179,18 +179,12 @@ print('final features:' , finalFeatures)
 print("hola")
 print(df_final)
 
-'''
-
-#pip install -U pandas-profiling
-
 # Reporte
 
-profile2 = ProfileReport(df)
-profile2.to_file('Reporte de data de Phishing (sample).html')
+profile = ProfileReport(df)
+profile.to_file('Reporte de data de Phishing (new).html')
 
-'''
-
-#print(pd.__version__)
+print(pd.__version__)
 #!pip freeze |grep pandas-profiling
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
