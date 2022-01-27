@@ -221,17 +221,16 @@ highCorrDf = df_final[['ip', 'nb_www','nb_com', 'tld_in_path', 'tld_in_subdomain
 
 print("PARTE 1 Finalizada")
 print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 # PARTE 2
-print("PARTE 2: Implementacion del modelo")
+print('PARTE 2 COMENZADA')
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 
-# Separación de datos
+# PARTE 2: SEPARACION DE DATOS
 target = df_final['status']
 #print(highCorrDf, target)
 feature_matrix_train, feature_matrix_test, target_train, target_test = model_selection.train_test_split(highCorrDf, target, test_size=0.30, random_state=123)
@@ -239,14 +238,19 @@ feature_matrix_train, feature_matrix_test, target_train, target_test = model_sel
 clf = tree.DecisionTreeClassifier()
 clf = clf.fit(feature_matrix_train, target_train)
 
+
+print("PARTE 2: SEPARACION DE DATOS TERMINADA")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+
 #print(feature_matrix_train.count())
 #print(feature_matrix_test.count())
 
-# Metricas
+# PARTE2 : IMPLEMENTACION
 target_pred = clf.predict(feature_matrix_test)
 print(metrics.accuracy_score(target_test, target_pred))
 print('Matriz de confusion \n',metrics.confusion_matrix(target_test, target_pred))
 print(metrics.classification_report(target_test, target_pred, target_names=['legitimate', 'Phishing']))
 
-
-print("PARTE 2: Separacion de datos finalizada")
+print("PARTE 2: IMPLEMENTACION TERMINADA")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+print("fin :)")
