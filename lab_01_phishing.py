@@ -5,7 +5,7 @@
 
 import pandas as pd
 import numpy as np
-import sklearn as sk
+from sklearn import metrics, model_selection, tree
 import  matplotlib.pyplot as plt
 import pandas_profiling as pp
 from pandas_profiling import ProfileReport
@@ -13,9 +13,11 @@ from pandas_profiling import ProfileReport
 # PARTE 1
 
 # EXPLORACION DE DATOS
+print("PARTE 1 COMENZADA")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 df = pd.read_csv("C:\\Users\\sergi\\Desktop\\UVG\\2022\\SECURITY DATA SCIENCE\\lab_01_phishing\\lab_01_phishing\\dataset_pishing.csv", encoding="utf-8")
-df.head()
 
 df['status'].value_counts(dropna=False)
 
@@ -24,7 +26,6 @@ df['status'].value_counts(dropna=False)
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # DERIVACION DE CARACTERISTICAS
-
 ## Derivacion de: f1, f2: URL parts lengths
 
 # f1: full url length
@@ -144,6 +145,8 @@ df[['hostname','f27']]
 df.drop(['hostname'],axis=1,inplace=True)
 df['hostname'] = df['url'].apply(get_domain)
 df.head()
+print("PARTE 1 : DERIVACION DE CARACTERISTICAS TERMINADO")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # PREPROCESAMIENTO
@@ -167,35 +170,83 @@ df.drop('url', axis=1, inplace=True)
 dfTest = df
 df.head()
 dfTest.head()
+print("PARTE 1 : PREPROCESAMIENTO TERMINADO")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # VISUALIZACION DE RESULTADOS
 
 # Features finales
+
+df = df.apply(pd.to_numeric)
+#df = df.astype(int)
+
 df_final = df
 finalFeatures = df_final.columns
 print('final features:' , finalFeatures)
+print("PARTE 1 : VISUALIZACION DE RESULTADOS TERMINADA")
+print("(ver archivo html para ver los resultados)")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 
-print("hola")
-print(df_final)
 
 # Reporte
+#profile = ProfileReport(df)
+#profile.to_file('Reporte de data de PhishingNUEVONUEVO.html')
 
-profile = ProfileReport(df)
-profile.to_file('Reporte de data de Phishing (new).html')
-
-print(pd.__version__)
+# print(pd.__version__)
 #!pip freeze |grep pandas-profiling
+
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # SELECCION DE CARACTERISTICAS
 
+# Eliminacion de columnas constantes e irrelevantes
+
+# Columnas constantes en '0'
+df_final.drop(['ratio_nullHyperlinks','ratio_intRedirection','ratio_intErrors','submit_email','sfh','f9','f12', 'f26','f27'], axis=1, inplace=True)
+#print(df_final.head())
+
+# Columnas con alta varizanza con status
+
+highCorrDf = df_final[['ip', 'nb_www','nb_com', 'tld_in_path', 'tld_in_subdomain','abnormal_subdomain', 'prefix_suffix', 'shortening_service','length_words_raw', 'char_repeat'
+, 'shortest_words_raw', 'shortest_word_host', 'longest_words_raw', 'longest_word_path', 'avg_word_path', 'phish_hints', 'domain_in_brand', 'nb_hyperlinks', 'ratio_intHyperlinks'
+, 'nb_extCSS', 'external_favicon', 'links_in_tags', 'ratio_intMedia', 'ratio_extMedia', 'safe_anchor', 'empty_title', 'domain_in_title', 'domain_with_copyright','domain_registration_length'
+, 'domain_age', 'web_traffic', 'google_index', 'page_rank', 'f1', 'f2', 'f4', 'f6', 'f7', 'f8', 'f10', 'f14', 'f18']]
+#print(highCorrDf.head())
 
 
+#print(highCorrDf.dtypes)
+
+print("PARTE 1 Finalizada")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 # PARTE 2
+print("PARTE 2: Implementacion del modelo")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+
+# Separación de datos
+target = df_final['status']
+#print(highCorrDf, target)
+feature_matrix_train, feature_matrix_test, target_train, target_test = model_selection.train_test_split(highCorrDf, target, test_size=0.30, random_state=123)
+
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(feature_matrix_train, target_train)
+
+#print(feature_matrix_train.count())
+#print(feature_matrix_test.count())
+
+# Metricas
+target_pred = clf.predict(feature_matrix_test)
+print(metrics.accuracy_score(target_test, target_pred))
+print('Matriz de confusion \n',metrics.confusion_matrix(target_test, target_pred))
+print(metrics.classification_report(target_test, target_pred, target_names=['legitimate', 'Phishing']))
+
+
+print("PARTE 2: Separacion de datos finalizada")
