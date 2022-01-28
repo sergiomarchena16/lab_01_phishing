@@ -3,6 +3,7 @@
 # SERGIO MARCHENA - 16387
 # SECURITY DATA SCIENCE
 
+from random import random
 import pandas as pd
 import numpy as np
 from sklearn import metrics, model_selection, tree
@@ -233,11 +234,32 @@ print("-------------------------------------------------------------------------
 # PARTE 2: SEPARACION DE DATOS
 target = df_final['status']
 #print(highCorrDf, target)
-feature_matrix_train, feature_matrix_test, target_train, target_test = model_selection.train_test_split(highCorrDf, target, test_size=0.30, random_state=123)
+#feature_matrix_train, feature_matrix_test, target_train, target_test = model_selection.train_test_split(highCorrDf, target, test_size=0.30, random_state=123)
+
+#11430
+def train_validate_test_split(df, train_percent=.55, validate_percent=.15, seed=123):
+    np.random.seed(seed)
+    perm = np.random.permutation(df.index)
+    m = len(df.index)
+    train_end = int(train_percent * m)
+    validate_end = int(validate_percent * m) + train_end
+    train = df.iloc[perm[:train_end]]
+    validate = df.iloc[perm[train_end:validate_end]]
+    test = df.iloc[perm[validate_end:]]
+    return train, validate, test
+
+#train, validate, test = train_validate_test_split(highCorrDf)
+#print(train, validate, test)
+
+#55% de entrenamiento y 45% para validación y pruebas.
+x_train, x_val_test, y_train, y_val_test = model_selection.train_test_split(highCorrDf, target, test_size = 0.55, random_state=123)
+
+#segunda separación se puede hacer en 33% y 67% respectivamente. 
+x_val, x_test, y_val, y_test = model_selection.train_test_split(x_val_test, target, test_size = 0.33, random_state=321)
 
 clf = tree.DecisionTreeClassifier()
-clf = clf.fit(feature_matrix_train, target_train)
-
+#clf = clf.fit(feature_matrix_train, target_train)
+clf = clf.fit(x_train,y_train)
 
 print("PARTE 2: SEPARACION DE DATOS TERMINADA")
 print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
@@ -246,11 +268,21 @@ print("-------------------------------------------------------------------------
 #print(feature_matrix_test.count())
 
 # PARTE2 : IMPLEMENTACION
-target_pred = clf.predict(feature_matrix_test)
-print(metrics.accuracy_score(target_test, target_pred))
-print('Matriz de confusion \n',metrics.confusion_matrix(target_test, target_pred))
-print(metrics.classification_report(target_test, target_pred, target_names=['legitimate', 'Phishing']))
+
+#  x_train y se predice contra x_val.
+
+#target_pred = clf.predict(feature_matrix_test)
+#target_pred = clf.predict(x_val_test)
+#print(metrics.accuracy_score(target_test, target_pred))
+#print(metrics.accuracy_score(y_val_test, target_pred))
+#print('Matriz de confusion \n',metrics.confusion_matrix(target_test, target_pred))
+#print('Matriz de confusion \n',metrics.confusion_matrix(y_val_test, target_pred))
+#print(metrics.classification_report(target_test, target_pred, target_names=['legitimate', 'Phishing']))
+#print(metrics.classification_report(y_val_test, target_pred, target_names=['legitimate', 'Phishing']))
+
 
 print("PARTE 2: IMPLEMENTACION TERMINADA")
 print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 print("fin :)")
+
+#Si los resultados son aceptables, se procede a predecir contra x_test
