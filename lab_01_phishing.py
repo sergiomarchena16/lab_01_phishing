@@ -252,10 +252,11 @@ def train_validate_test_split(df, train_percent=.55, validate_percent=.15, seed=
 #print(train, validate, test)
 
 #55% de entrenamiento y 45% para validación y pruebas.
-x_train, x_val_test, y_train, y_val_test = model_selection.train_test_split(highCorrDf, target, test_size = 0.55, random_state=123)
+#45y55
+x_train, x_val_test, y_train, y_val_test = model_selection.train_test_split(highCorrDf, target, test_size = 0.45, random_state=123)
 
 #segunda separación se puede hacer en 33% y 67% respectivamente. 
-x_val, x_test, y_val, y_test = model_selection.train_test_split(x_val_test, target, test_size = 0.33, random_state=321)
+x_val, x_test, y_val, y_test = model_selection.train_test_split(x_val_test, y_val_test, test_size = 0.33, random_state=123)
 
 clf = tree.DecisionTreeClassifier()
 #clf = clf.fit(feature_matrix_train, target_train)
@@ -271,15 +272,39 @@ print("-------------------------------------------------------------------------
 
 #  x_train y se predice contra x_val.
 
-#target_pred = clf.predict(feature_matrix_test)
-#target_pred = clf.predict(x_val_test)
-#print(metrics.accuracy_score(target_test, target_pred))
-#print(metrics.accuracy_score(y_val_test, target_pred))
-#print('Matriz de confusion \n',metrics.confusion_matrix(target_test, target_pred))
-#print('Matriz de confusion \n',metrics.confusion_matrix(y_val_test, target_pred))
-#print(metrics.classification_report(target_test, target_pred, target_names=['legitimate', 'Phishing']))
-#print(metrics.classification_report(y_val_test, target_pred, target_names=['legitimate', 'Phishing']))
+print("PARTE 2: Validacion")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 
+
+# validacion (15%)
+#target_pred = clf.predict(feature_matrix_test)
+target_pred = clf.predict(x_val)
+#print(metrics.accuracy_score(target_test, target_pred))
+print('Accuracy: ', metrics.accuracy_score(y_val, target_pred))
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+#print('Matriz de confusion \n',metrics.confusion_matrix(target_test, target_pred))
+print('Matriz de confusion \n',metrics.confusion_matrix(y_val, target_pred))
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+#print(metrics.classification_report(target_test, target_pred, target_names=['legitimate', 'Phishing']))
+print(metrics.classification_report(y_val, target_pred, target_names=['Legitimate', 'Phishing']))
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+
+
+print("PARTE 2: Test")
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+
+# test (30%)
+#target_pred = clf.predict(feature_matrix_test)
+target_pred_test = clf.predict(x_test)
+#print(metrics.accuracy_score(target_test, target_pred))
+print('Accuracy: ', metrics.accuracy_score(y_test, target_pred_test))
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+#print('Matriz de confusion \n',metrics.confusion_matrix(target_test, target_pred))
+print('Matriz de confusion \n',metrics.confusion_matrix(y_test, target_pred_test))
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+#print(metrics.classification_report(target_test, target_pred, target_names=['legitimate', 'Phishing']))
+print(metrics.classification_report(y_test, target_pred_test, target_names=['Legitimate', 'Phishing']))
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 print("PARTE 2: IMPLEMENTACION TERMINADA")
 print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
