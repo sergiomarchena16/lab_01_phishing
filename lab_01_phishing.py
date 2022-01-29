@@ -20,7 +20,8 @@ print("-------------------------------------------------------------------------
 
 df = pd.read_csv("C:\\Users\\sergi\\Desktop\\UVG\\2022\\SECURITY DATA SCIENCE\\lab_01_phishing\\lab_01_phishing\\dataset_pishing.csv", encoding="utf-8")
 
-df['status'].value_counts(dropna=False)
+print(df['status'].value_counts(dropna=False))
+print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 # El dataset esta balanceado exactamente en 50/50, es decir, el 50% de las observaciones esta categorizada como phishing y el otro 50% esta clasificado como legitimate
 
@@ -256,7 +257,7 @@ def train_validate_test_split(df, train_percent=.55, validate_percent=.15, seed=
 x_train, x_val_test, y_train, y_val_test = model_selection.train_test_split(highCorrDf, target, test_size = 0.45, random_state=123)
 
 #segunda separación se puede hacer en 33% y 67% respectivamente. 
-x_val, x_test, y_val, y_test = model_selection.train_test_split(x_val_test, y_val_test, test_size = 0.33, random_state=123)
+x_val, x_test, y_val, y_test = model_selection.train_test_split(x_val_test, y_val_test, test_size = 0.67, random_state=123)
 
 clf = tree.DecisionTreeClassifier()
 #clf = clf.fit(feature_matrix_train, target_train)
